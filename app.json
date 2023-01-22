@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "جمعية إحسان",
+    "slug": "ihsan",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/Icon.png",
+    "splash": {
+      "image": "./assets/splash2.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/Icon.png",
+        "backgroundColor": "#FFFFFF"
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.fares081998.Ihsan"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "625dbffe-5616-4ea7-825a-4de783ce8119"
+      }
+    }
+  }
+}
