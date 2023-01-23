@@ -120,7 +120,6 @@ export default function AddChild({ route, navigation }) {
   const CreateKid = async () => {
     Keyboard.dismiss();
     if (validate()) {
-      alert("valid");
       const res = await AddKid({
         id: route.params._id,
         kid: {

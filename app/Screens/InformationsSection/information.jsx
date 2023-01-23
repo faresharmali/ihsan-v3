@@ -24,13 +24,17 @@ export default function Information({ route, navigation, updatePath }) {
   let Info = useSelector((state) => state.Informations).filter(
     (i) => i.id == route.params.data.id
   )[0];
+
+  console.log("Info.kids",Info.kids)
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
 
       <View style={styles.pageEntity}>
         <View style={styles.IconsContainer}>
-          <Icon as={Ionicons} size={8} color="#fff" name="md-chevron-back" />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon as={Ionicons} size={8} color="#fff" name="md-chevron-back" />
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate(updatePath, {

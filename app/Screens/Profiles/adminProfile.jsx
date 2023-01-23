@@ -22,8 +22,9 @@ import UserInfos from "./userInfos";
 import { useSelector } from "react-redux";
 export default function AdminProfile({ route, navigation }) {
   const [section, setSection] = useState("infos");
-
   let Informations = useSelector((state) => state.Informations).filter((info)=>info.author==route.params.name);
+  let user = useSelector((state) => state.users).filter((user)=>user._id==route.params._id)[0];
+  let current =useSelector((state) => state.Auth)
   const openModal = (data) => {
     navigation.navigate("InformationAdmin", {data});
   };
@@ -36,18 +37,20 @@ export default function AdminProfile({ route, navigation }) {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon as={Ionicons} size={8} color="#fff" name="md-chevron-back" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("UpdateProfileInfo",{Infos:route.params})}>
+          {route.params.EnableEdit && current.job=="قسم الادارة" && (
+            <TouchableOpacity onPress={() => navigation.navigate("UpdateProfileInfo",{Infos:route.params,fetchUsers:route.params.fetchUsers})}>
           <Icon
             as={MaterialCommunityIcons}
             size={8}
             color="#fff"
             name="square-edit-outline"
-          />
+            />
           </TouchableOpacity>
+            )}
        
         </View>
         <Image style={styles.EntityImage} source={man} />
-        <Text style={styles.EntityTitle}>{route.params[0]}</Text>
+        <Text style={styles.EntityTitle}>{user.name}</Text>
         <View style={styles.Navigation}>
           <TouchableOpacity onPress={() => setSection("infos")}>
             <View style={styles.NavigationItem}>
@@ -64,7 +67,7 @@ export default function AdminProfile({ route, navigation }) {
       </View>
 
       {section == "infos" && (
-        <UserInfos title="معلومات العضو" data={route.params} />
+        <UserInfos title="معلومات العضو" data={user} />
       )}
   
       {section == "posts" && (

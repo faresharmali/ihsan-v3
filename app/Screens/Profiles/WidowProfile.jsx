@@ -28,12 +28,12 @@ export default function WidowProfile({ route, navigation }) {
   );
   let Demands = useSelector((state) => state.Informations).filter(
     (info) =>
-      info.famillies.some((family) => family.id === route.params.id) &&
+      info.famillies.some((family) => family?.id === route.params.id) &&
       info.type == "demand"
   );
   let Benifits = useSelector((state) => state.Informations).filter(
     (info) =>
-      info.famillies.some((family) => family.id === route.params.id) &&
+      info.famillies.some((family) => family?.id === route.params.id) &&
       info.type == "benefit"
   );
 
@@ -61,7 +61,7 @@ export default function WidowProfile({ route, navigation }) {
           ></TouchableOpacity>
         </View>
         <Image style={styles.EntityImage} source={Family} />
-        <Text style={styles.EntityTitle}>{family.motherFullName}</Text>
+        <Text style={styles.EntityTitle}>{family?.motherFullName}</Text>
         <View style={styles.Navigation}>
           <TouchableOpacity onPress={() => setSection("infos")}>
             <View style={styles.NavigationItem}>

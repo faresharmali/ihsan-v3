@@ -31,17 +31,17 @@ export default function Users({ navigation, drawer }) {
     switch (u.job) {
       case "موزع القفة":
         navigation.navigate("Distributeur", {
-          ...u,
+          ...u,fetchUsers,EnableEdit:true
         });
         break;
       case "وسيط اجتماعي":
         navigation.navigate("Wasset", {
-          ...u,
+          ...u,fetchUsers,EnableEdit:true
         });
         break;
       default:
         navigation.navigate("AdminProfile", {
-          ...u,
+          ...u,fetchUsers,EnableEdit:true
         });
     }
   };
@@ -83,21 +83,25 @@ export default function Users({ navigation, drawer }) {
   };
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
-      const res = await getUsers();
-      dispatch(
-        updateState(
-          res.data.result.map((user) => ({
-            0: user.name,
-            1: user.phone,
-            2: user.job,
-            ...user,
-          }))
-        )
-      );
+      fetchUsers()
     });
 
     return unsubscribe;
   }, [navigation]);
+
+  const fetchUsers = async () => {
+    const res = await getUsers();
+    dispatch(
+      updateState(
+        res.data.result.map((user) => ({
+          0: user.name,
+          1: user.phone,
+          2: user.job,
+          ...user,
+        }))
+      )
+    );
+  }
 
   const filterInformations = (section) => {
     if (section == "all") {

@@ -34,12 +34,12 @@ export default function FamilyScreen({ route, navigation }) {
 
   let Demands = useSelector((state) => state.Informations).filter(
     (info) =>
-      info.famillies.some((family) => family.id === route.params.id) &&
+      info.famillies.some((family) => family?.id === route.params.id) &&
       info.type == "demand"
   );
   let Benifits = useSelector((state) => state.Informations).filter(
     (info) =>
-      info.famillies.some((family) => family.id === route.params.id) &&
+      info.famillies.some((family) => family?.id === route.params.id) &&
       info.type == "benefit"
   );
 
@@ -54,7 +54,7 @@ export default function FamilyScreen({ route, navigation }) {
     });
   };
   const viewKid = (kid) => {
-    navigation.navigate("KidProfile", { kid, showToast });
+    navigation.navigate("KidProfile", { kid:{...kid,Family:family?._id}, showToast ,fetchFamillies:route.params.fetchFamillies});
   };
 
   return (
@@ -80,7 +80,7 @@ export default function FamilyScreen({ route, navigation }) {
         <Image style={styles.EntityImage} source={Family} />
         <Text
           style={styles.EntityTitle}
-        >{`عائلة ${family.motherFullName} ارملة ${family.fatherFirstName}  ${family.fatherLastName}`}</Text>
+        >{`عائلة ${family?.motherFullName} ارملة ${family?.fatherFirstName}  ${family?.fatherLastName}`}</Text>
         <View style={styles.Navigation}>
           <TouchableOpacity onPress={() => setSection("infos")}>
             <View style={styles.NavigationItem}>
@@ -120,7 +120,7 @@ export default function FamilyScreen({ route, navigation }) {
           </TouchableOpacity>
         </>
       )}
-      {section == "infos" && <FamilyInfo data={family} />}
+      {section == "infos" && <FamilyInfo navigation={navigation} data={family} />}
       {section == "demands" && (
         <ScrollView style={styles.Content}>
           {Demands.map((u) => (

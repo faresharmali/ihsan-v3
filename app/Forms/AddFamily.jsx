@@ -298,7 +298,7 @@ export default function AddFamily({ route, navigation }) {
                 InputRightElement={
                   <Icon
                     style={{ marginRight: 10 }}
-                    as={<MaterialIcons name="account-circle" />}
+                    as={<MaterialIcons name="location-pin" />}
                     size={5}
                     ml="2"
                     color="#348578"
@@ -323,7 +323,7 @@ export default function AddFamily({ route, navigation }) {
                 InputRightElement={
                   <Icon
                     style={{ marginRight: 10 }}
-                    as={<MaterialIcons name="lock" />}
+                    as={<MaterialIcons name="attach-money" />}
                     size={5}
                     ml="2"
                     color="#348578"
@@ -346,7 +346,7 @@ export default function AddFamily({ route, navigation }) {
                 InputRightElement={
                   <Icon
                     style={{ marginRight: 10 }}
-                    as={<MaterialIcons name="lock" />}
+                    as={<MaterialIcons name="attach-money" />}
                     size={5}
                     ml="2"
                     color="#348578"
@@ -374,7 +374,7 @@ export default function AddFamily({ route, navigation }) {
                 }}
               >
                 <Icon
-                  as={<MaterialIcons name="lock" />}
+                  as={<FontAwesome name="user" />}
                   size={5}
                   ml="2"
                   color="#348578"
@@ -390,7 +390,7 @@ export default function AddFamily({ route, navigation }) {
                 }}
               >
                 <Icon
-                  as={<MaterialIcons name="lock" />}
+                  as={<FontAwesome name="user" />}
                   size={5}
                   ml="2"
                   color="#348578"
@@ -431,6 +431,7 @@ export default function AddFamily({ route, navigation }) {
         isPanelActive={isPanelActive}
         setIsPanelActive={setIsPanelActive}
         setshowButton={setshowButton}
+        search={true}
       />
       <Swipable
         title="اختيار موزع القفة"
@@ -439,6 +440,8 @@ export default function AddFamily({ route, navigation }) {
         isPanelActive={deliveryPannel}
         setIsPanelActive={setDeliveryPannel}
         setshowButton={setshowButton}
+        search={true}
+
       />
     </View>
   );

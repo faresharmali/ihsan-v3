@@ -21,17 +21,14 @@ export default function Income({ navigation, drawer }) {
   let Transactions = useSelector((state) => state.Finance).transactions.filter(
     (t) => t.income
   );
-
   const [active, setActive] = useState(6);
-  const [displayedData, setDisplayedData] = useState([]);
-  const [AllTransactions, setAllTransactions] = useState(Transactions);
   const [filterBy, setfilterBy] = useState("all");
   const dispatch = useDispatch();
   const showToast = () => {
     Toast.show({
       type: "success",
       text1: "نجحت العملية",
-      text2: " تمت اضافة الكفالة بنجاح  👋",
+      text2: " تمت الاضافة بنجاح  👋",
     });
   };
   const updateState = (data) => {
@@ -41,40 +38,30 @@ export default function Income({ navigation, drawer }) {
     };
   };
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", async () => {
+    const unsubscribe = navigation.addListener("focus", () => {
       refresh();
     });
     return unsubscribe;
-  }, [navigation,filterBy]);
-
-
+  }, [navigation]);
 
   const openTransaction = (id) => {
-    navigation.navigate("Transaction", { id, type: "مدخول",refresh });
+    navigation.navigate("Transaction", { id, type: "مدخول", refresh });
   };
 
   const filterData = (type) => {
     setfilterBy(type);
-    if (type == "all") {
-      setDisplayedData(AllTransactions);
-    } else {
-      setDisplayedData(AllTransactions.filter((t) => t.type == type));
-    }
+   
   };
   const refresh = async () => {
     try {
       const res = await getTransactions();
       dispatch(updateState(res.data.result));
-      setAllTransactions(Transactions);
-      if (filterBy.trim() == "all") {
-        setDisplayedData(Transactions);
-      } else {
-        setDisplayedData(Transactions.filter((t) => t.type == filterBy));
-      }
+
     } catch (e) {
       console.log(e);
     }
   };
+
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
@@ -227,13 +214,23 @@ export default function Income({ navigation, drawer }) {
       </View>
       <View style={styles.Section}>
         <ScrollView style={styles.Content}>
-          {displayedData.map((transaction) => (
-            <TransactionContainer
-              key={transaction.identifier}
-              open={openTransaction}
-              data={transaction}
-            />
-          ))}
+          {filterBy == "all"
+            ? Transactions.map((transaction) => (
+                <TransactionContainer
+                  key={transaction.identifier}
+                  open={openTransaction}
+                  data={transaction}
+                />
+              ))
+            : Transactions.filter((t) => t.type == filterBy).map(
+                (transaction) => (
+                  <TransactionContainer
+                    key={transaction.identifier}
+                    open={openTransaction}
+                    data={transaction}
+                  />
+                )
+              )}
         </ScrollView>
       </View>
       <Toast config={toastConfig} />

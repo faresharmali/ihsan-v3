@@ -163,7 +163,7 @@ export default function Administration({ route, navigation }) {
           )}
         </Stack.Screen>
 
-        <Stack.Screen name="UpdateUser" component={UpdateUser} />
+        <Stack.Screen name="UpdateUser" component={UpdateUser} options={TransitionFromBottom} />
         <Stack.Screen name="UpdateWasset" component={UpdateWasset} />
         <Stack.Screen name="AddOrphan" component={AddOrphan} />
         <Stack.Screen name="UpdateFamily" component={UpdateFamily} />

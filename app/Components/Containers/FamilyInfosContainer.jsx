@@ -13,7 +13,7 @@ export default function FamilyInfosContainer(props) {
   return (
     <TouchableOpacity
       onLongPress={
-        props.selectFamily ? () => props.selectFamily(props.data.id) : () => {}
+        props.selectFamily ? () => props.selectFamily(props.data?.id) : () => {}
       }
       onPress={props.openFamily}
       style={styles.DataContainer}
@@ -24,19 +24,19 @@ export default function FamilyInfosContainer(props) {
       />
       <View style={styles.infos}>
         <Text style={styles.UserPersonal}>
-          {`عائلة ${props.data.motherFullName} ارملة ${props.data.fatherFirstName} ${props.data.fatherLastName}`}{" "}
+          {`عائلة ${props.data?.motherFullName} ارملة ${props.data?.fatherFirstName} ${props.data?.fatherLastName}`}{" "}
         </Text>
         <View style={styles.secondaryInfos}>
-          {props.data.phone && (
+          {props.data?.phone && (
             <>
               <Icon as={MaterialIcons} name="phone" size={4} color="#000" />
-              <Text> {props.data.phone}</Text>
+              <Text> {props.data?.phone}</Text>
             </>
           )}
-          {props.data.adresse && (
+          {props.data?.adresse && (
             <>
               <Icon as={MaterialIcons} name="map" size={4} color="#000" />
-              <Text> {props.data.adresse}</Text>
+              <Text> {props.data?.adresse}</Text>
             </>
           )}
         </View>

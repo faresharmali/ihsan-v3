@@ -24,7 +24,7 @@ export default function UserProfile({ route, navigation }) {
   let LoggedUser = useSelector((state) => state.Auth);
   let User = useSelector((state) => state.users).filter((user)=>user.id==LoggedUser.id)[0];
 
-  let Informations = useSelector((state) => state.Informations).filter((info)=>info.author==LoggedUser?.name);
+  let Informations = useSelector((state) => state.Informations).filter((info)=>info.author?._id==LoggedUser?._id);
   const openModal = (data) => {
     navigation.navigate("InformationAdmin", {data});
   };
@@ -37,7 +37,7 @@ export default function UserProfile({ route, navigation }) {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Icon as={Ionicons} size={8} color="#fff" name="md-chevron-back" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate("UpdateProfile",{Infos:{...LoggedUser}})}>
+          <TouchableOpacity onPress={() => navigation.navigate("UpdateProfile",{Infos:{...LoggedUser},current:"Current"})}>
           <Icon
             as={MaterialCommunityIcons}
             size={8}

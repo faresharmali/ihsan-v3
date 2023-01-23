@@ -44,7 +44,7 @@ export default function Families({ navigation, drawer }) {
 
   };
   const openModal = (data) => {
-    navigation.navigate("Family", { ...data });
+    navigation.navigate("Family", { ...data ,fetchFamillies });
   };
   let MyFamilies = useSelector((state) => state.Families);
   const updateState = (data) => {
@@ -60,20 +60,7 @@ export default function Families({ navigation, drawer }) {
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("focus", async () => {
-      const res = await getFamilies();
-      dispatch(
-        updateState(
-          res.data.result.map((f) => ({
-            ...f,
-            title:
-              f.motherFullName +
-              " " +
-              f.fatherFirstName +
-              " " +
-              f.fatherLastName,
-          }))
-        )
-      );
+      fetchFamillies()
     });
 
     return unsubscribe;
@@ -94,6 +81,22 @@ export default function Families({ navigation, drawer }) {
 
     ]
     PrintData("قائمة العائلات", headings, Displayedfamillies.map((t) => ({ name: t.motherFullName, father: t.fatherFirstName + " " + t.fatherLastName, address: t.adresse, phone: t.phone, donation: t.donation, wasset: t.wasseet })))
+  }
+  const fetchFamillies = async () => {
+    const res = await getFamilies();
+    dispatch(
+      updateState(
+        res.data.result.map((f) => ({
+          ...f,
+          title:
+            f.motherFullName +
+            " " +
+            f.fatherFirstName +
+            " " +
+            f.fatherLastName,
+        }))
+      )
+    );
   }
   return (
     <View style={styles.container}>

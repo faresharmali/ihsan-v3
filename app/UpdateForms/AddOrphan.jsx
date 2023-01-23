@@ -25,7 +25,7 @@ export default function AddOrphan({ route, navigation }) {
 
   let kids = [];
   Famillies.forEach((f) => {
-    f.kids.forEach((k) => {
+    f.children.forEach((k) => {
       kids.push({
         ...k,
         lastName: f.fatherLastName,

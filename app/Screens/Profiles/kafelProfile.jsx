@@ -31,13 +31,15 @@ export default function KafelProfile({ route, navigation }) {
   const [selectedFamily, setSelectedFamily] = useState(null);
   const [selectedOrphan, setSelectedOrphan] = useState(null);
 
-  const StateKafel = useSelector((state) => state.Donators).filter(
+  const Kafel = useSelector((state) => state.Donators).filter(
     (u) => u.id == route.params.id
   )[0];
+
   const Familli = useSelector((state) => state.Families);
+
   let kids = [];
   Familli.forEach((f) => {
-    f.kids.forEach((k) => {
+    f.children.forEach((k) => {
       kids.push({
         ...k,
         lastName: f.fatherLastName,
@@ -88,25 +90,25 @@ export default function KafelProfile({ route, navigation }) {
     );
   };
   const deleteFamily = async () => {
-    let User = { ...StateKafel };
-    User.famillies = StateKafel.famillies.filter((f) => f.id != selectedFamily);
+    let User = { ...Kafel };
+    User.famillies = Kafel.famillies.filter((f) => f.id != selectedFamily);
     await update(User);
     showDeleteModal(false);
   };
   const deleteOrphan = async () => {
-    let User = { ...StateKafel };
-    User.orphans = StateKafel.orphans.filter((f) => f.id != selectedOrphan);
+    let User = { ...Kafel };
+    User.orphans = Kafel.orphans.filter((f) => f.id != selectedOrphan);
     await update(User);
     showDeleteModal2(false);
   };
   const AddFamily = async (famillies) => {
-    let User = { ...StateKafel };
+    let User = { ...Kafel };
     User.famillies = [...User.famillies, ...famillies];
     await update(User);
     showDeleteModal(false);
   };
   const AddOrphan = async (famillies) => {
-    let User = { ...StateKafel };
+    let User = { ...Kafel };
     User.orphans = [...User.orphans, ...famillies];
     await update(User);
     showDeleteModal(false);
@@ -160,22 +162,25 @@ export default function KafelProfile({ route, navigation }) {
       {section == "Famillies" && (
         <>
           <ScrollView style={styles.Content}>
-            {StateKafel.famillies &&
-              StateKafel.famillies.length > 0 &&
-              StateKafel.famillies.map((f) => (
-                <FamilyInfosContainer
-                  key={f._id}
-                  AvatarSize={40}
-                  data={Familli.filter((fa) => fa.id == f.id)[0]}
-                  pic={Family}
-                  selectFamily={selectFamily}
-                />
-              ))}
+            {Kafel.famillies &&
+              Kafel.famillies.map((f, index) =>
+                Familli.filter((fa) => fa.id == f.id)[0] ? (
+                  <FamilyInfosContainer
+                    key={index}
+                    AvatarSize={40}
+                    data={Familli.filter((fa) => fa.id == f.id)[0]}
+                    pic={Family}
+                    selectFamily={selectFamily}
+                  />
+                ) : (
+                  ""
+                )
+              )}
           </ScrollView>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("UpdateWasset", {
-                Infos: StateKafel,
+                Infos: Kafel,
                 AddFamily,
               })
             }
@@ -189,21 +194,25 @@ export default function KafelProfile({ route, navigation }) {
       {section == "kids" && (
         <>
           <ScrollView style={styles.Content}>
-            {StateKafel.famillies &&
-              StateKafel.orphans.map((f) => (
-                <OrphanContainer
-                  key={f._id}
-                  AvatarSize={40}
-                  data={kids.filter((fa) => fa.id == f.id)[0]}
-                  pic={Family}
-                  selectOrphan={selectOrphan}
-                />
-              ))}
+            {Kafel.orphans &&
+              Kafel.orphans.map((f) =>
+                kids.filter((fa) => fa.id == f.id)[0] ? (
+                  <OrphanContainer
+                    key={f._id}
+                    AvatarSize={40}
+                    data={kids.filter((fa) => fa.id == f.id)[0]}
+                    pic={Family}
+                    selectOrphan={selectOrphan}
+                  />
+                ) : (
+                  ""
+                )
+              )}
           </ScrollView>
           <TouchableOpacity
             onPress={() =>
               navigation.navigate("AddOrphan", {
-                Infos: StateKafel,
+                Infos: Kafel,
                 AddOrphan,
               })
             }

@@ -1,4 +1,4 @@
-const api = "http://192.168.100.222:3000/informations";
+const api = "https://ihssan-backend.vercel.app/informations";
 const axios = require("axios");
 
 

@@ -11,11 +11,12 @@ import React, { useState, useEffect } from "react";
 import { Input, Stack, Icon, Radio, Checkbox, HStack } from "native-base";
 import { FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import { AddKid } from "../api/family";
+import { AddKid, UpdateChild } from "../api/family";
 import ScolaritySwipeable from "../Components/Containers/ScolaritySwipable";
 import MultipleOptionSwipable from "../Components/Containers/MultipleOptionSwipable";
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 export default function UpdateOrphan({ route, navigation }) {
-  const dispatch = useDispatch();
+  const [showDatePicker, setshowDatePicker] = useState(false);
   const [ErrorMessageVisible, setErrorMessageVisible] = useState(false);
   const [LevelChoiceVisible, setLevelChoiceVisible] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
@@ -31,6 +32,8 @@ export default function UpdateOrphan({ route, navigation }) {
   const [gender, setgender] = useState("ذكر");
   const [Education, setEducation] = useState(route.params.infos.Education);
   const [ModulesPannel, setIsModulesPannel] = useState(false);
+  const [date, setdate] = useState(route.params.infos.year+"-"+route.params.infos.month+"-"+route.params.infos.day);
+
   const [SelectedModules, setSelectedModules] = useState(
     route.params.infos.modules ? JSON.parse(route.params.infos.modules) : []
   );
@@ -65,7 +68,13 @@ export default function UpdateOrphan({ route, navigation }) {
     if (ChildData.name.trim() == "") {
       (FieldErrors.name = true), (valid = false);
     }
-    if (ChildData.age.trim() == "") {
+    if (ChildData.day.trim() == "") {
+      (FieldErrors.age = true), (valid = false);
+    }
+    if (ChildData.month.trim() == "") {
+      (FieldErrors.age = true), (valid = false);
+    }
+    if (ChildData.year.trim() == "") {
       (FieldErrors.age = true), (valid = false);
     }
     if (ChildData.scolarity.trim() == "") {
@@ -77,6 +86,7 @@ export default function UpdateOrphan({ route, navigation }) {
     if (Education && SelectedModules.length == 0) {
       (FieldErrors.modules = true), (valid = false);
     }
+    console.log(FieldErrors);
     SetErrors(FieldErrors);
     return valid;
   };
@@ -86,24 +96,27 @@ export default function UpdateOrphan({ route, navigation }) {
     fontSize: 15,
     fontFamily: "Tajawal-Medium",
   };
-  const addkid = (data) => {
-    return {
-      type: "AddChild",
-      data: data,
-    };
-  };
 
-  const CreateKid = async () => {
+
+  const UpdateKid = async () => {
     Keyboard.dismiss();
     if (validate()) {
-      route.params.updateInfos({
-        ...ChildData,
+      try{
+        let res = await UpdateChild({
+          ...ChildData,
         gender,
         Education,
         sick,
         modules: JSON.stringify(SelectedModules),
-      });
-      navigation.goBack();
+      })
+      if(res.ok){
+        navigation.goBack();
+        route.params.updateInfos()
+      }
+    }catch(e){
+      console.log(e);
+    }
+     // navigation.goBack();
     } else {
       setErrorMessage("كل الخانات اجبارية");
       setErrorMessageVisible(true);
@@ -163,6 +176,31 @@ export default function UpdateOrphan({ route, navigation }) {
     { title: "اللغة الفرنسية", id: 3 },
     { title: "اللغة الانجليزية", id: 4 },
   ];
+
+  const HandleDate = (event, date) => {
+    setshowDatePicker(false);
+    if (event.type == "set") {
+      if (date) {
+        let MyDate = new Date(date);
+        setChildData({
+          ...ChildData,
+          day: MyDate.getDate() + "",
+          month:
+            MyDate.getMonth() + 1 > 9
+              ? +(MyDate.getMonth() + 1) + ""
+              : "0" +(MyDate.getMonth() + 1),
+          year: MyDate.getFullYear() + "",
+        });
+        setdate(
+          MyDate.getFullYear() +
+            "-" +
+            (MyDate.getMonth() + 1) +
+            "-" +
+            MyDate.getDate()
+        );
+      }
+    }
+  };
   return (
     <View style={styles.Container}>
       <View style={styles.TitleContainer}>
@@ -206,29 +244,14 @@ export default function UpdateOrphan({ route, navigation }) {
           borderColor={errors.name ? "#c21a0e" : "grey"}
           onChangeText={(text) => inputHandler(text, "name")}
         />
-        <Input
-          InputRightElement={
-            <Icon
-              style={{ marginRight: 10 }}
-              as={<FontAwesome name="birthday-cake" />}
-              size={5}
-              ml="2"
-              color="#348578"
-            />
-          }
-          w={{
-            base: "95%",
-            md: "25%",
-          }}
-          h={50}
-          textAlign="right"
-          placeholder="العمر "
-          {...styling}
-          borderWidth={1}
-          value={ChildData.age}
-          borderColor={errors.age ? "#c21a0e" : "grey"}
-          onChangeText={(text) => inputHandler(text, "age")}
-        />
+        <Text style={styles.label}>تاريخ الميلاد</Text>
+       <TouchableWithoutFeedback onPress={() => setshowDatePicker(true)}>
+          <View style={styles.dateContainer}>
+            <Text style={styles.InputText}> {date}</Text>
+          </View>
+
+        </TouchableWithoutFeedback>
+        <Text style={styles.label}>المستوى الدراسي</Text>
 
         <TouchableWithoutFeedback onPress={() => openUsersPanel()}>
           <View
@@ -347,7 +370,7 @@ export default function UpdateOrphan({ route, navigation }) {
         <TouchableOpacity
           style={styles.Button}
           mode="contained"
-          onPress={CreateKid}
+          onPress={UpdateKid}
         >
           <Text style={{ fontSize: 17, marginLeft: 10, color: "#fff" }}>
             تعديل{" "}
@@ -370,6 +393,15 @@ export default function UpdateOrphan({ route, navigation }) {
         setIsPanelActive={setIsModulesPannel}
         setshowButton={setshowButton}
       />
+          {showDatePicker && (
+        <RNDateTimePicker
+          is24Hour={true}
+          locale="ar-dz"
+          mode="date"
+          value={new Date()}
+          onChange={HandleDate}
+        />
+      )}
     </View>
   );
 }
@@ -446,4 +478,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 10,
   },
+  label: {
+    fontFamily: "Tajawal-Medium",
+    width: "95%",
+    fontSize: 15,
+    color: "#348578",
+
+  }
 });

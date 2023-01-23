@@ -94,7 +94,6 @@ export default function AddUser({ route, navigation }) {
         }
       } else {
         SetErrors({ ...errors, password: true, confirmepassword: true });
-
         setErrorMessage("كلمة السر غير متطابقة");
         setErrorMessageVisible(true);
       }

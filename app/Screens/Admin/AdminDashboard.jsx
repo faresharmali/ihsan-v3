@@ -136,7 +136,7 @@ export default function AdminDashboard({ navigation }) {
     let orphans = 0;
     let DoneKids = 0;
     res.data.result.forEach((f) => {
-      f.kids.forEach((k) => {
+      f.children.forEach((k) => {
         orphans++;
         if (k.Education) SoutientEduc++;
         if (kids.includes(k.id)) DoneKids++;

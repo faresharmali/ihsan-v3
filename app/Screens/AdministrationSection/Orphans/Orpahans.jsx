@@ -64,9 +64,6 @@ export default function Orphans({ navigation, drawer }) {
     return () => backHandler.remove();
   }, [isPanelActive]);
 
-  const viewKid = (kid) => {
-    navigation.navigate("KidProfile", { kid, fetchFamillies });
-  };
 
 
   const updateState = (data) => {
@@ -104,6 +101,10 @@ export default function Orphans({ navigation, drawer }) {
       })))
 
   }
+  const viewKid = (kid) => {
+    navigation.navigate("KidProfile", { kid, fetchFamillies });
+  };
+
 
   const filterInformations = (filter) => {
     if (filter == "all") {

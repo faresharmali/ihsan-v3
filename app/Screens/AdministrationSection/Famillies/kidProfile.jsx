@@ -24,8 +24,10 @@ import Toast from "react-native-toast-message";
 import toastConfig from "../../../Components/ToastConfiguration";
 import { UpdateFamilyInfos } from "../../../api/family";
 export default function KidProfile({ route, navigation }) {
+
   let family = useSelector((state) => state.Families).filter((f) => f._id == route.params.kid.Family)[0]
-  let kid = { ...route.params.kid, lastName: family.fatherLastName, familyId: family.id };
+  let kiddata=family.children.filter(k=>k.identifier==route.params.kid.identifier)[0]
+  let kid = {...kiddata, lastName: family.fatherLastName, familyId: family.id };
   const [section, setSection] = useState("infos");
   const [refresh, setRefresh] = useState(false);
 
@@ -47,14 +49,7 @@ export default function KidProfile({ route, navigation }) {
   });
 
   const updateInfos = async (infos) => {
-    let family = Families.filter((f) => f.id == infos.familyId)[0];
-
-    const res = await UpdateFamilyInfos(family);
-    if (res.ok) {
-      route.params.fetchFamillies();
-    } else {
-      alert("error");
-    }
+    route.params.fetchFamillies();
   };
 
   return (
@@ -86,7 +81,7 @@ export default function KidProfile({ route, navigation }) {
         </View>
         <Image style={styles.EntityImage} source={Family} />
 
-        <Text style={styles.EntityTitle}>{`${kid.name}  ${kid.lastName}`}</Text>
+        <Text style={styles.EntityTitle}>{`${kid.name}  ${kid?.lastName}`}</Text>
         <View style={styles.Navigation}>
           <TouchableOpacity onPress={() => setSection("infos")}>
             <View style={styles.NavigationItem}>
@@ -99,20 +94,20 @@ export default function KidProfile({ route, navigation }) {
               <Text style={styles.NavigationItemText}>طلبات</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSection("benefits")}>
-            <View style={styles.NavigationItem}>
-              <Text style={styles.NavigationItemText}>استفادات</Text>
-            </View>
-          </TouchableOpacity>
           <TouchableOpacity onPress={() => setSection("kofal")}>
             <View style={styles.NavigationItem}>
               <Text style={styles.NavigationItemText}>الكفال</Text>
             </View>
           </TouchableOpacity>
+          <TouchableOpacity onPress={() => setSection("benefits")}>
+            <View style={styles.NavigationItem}>
+              <Text style={styles.NavigationItemText}>استفادات</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
 
-      {section == "infos" && <KidInfo data={kid} />}
+      {section == "infos" && <KidInfo updateInfos={updateInfos} navigation={navigation} data={kid} />}
       {section == "demands" && (
         <ScrollView style={styles.Content}>
           {Demands.map((u) => (

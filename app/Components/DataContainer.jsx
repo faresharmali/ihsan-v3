@@ -25,7 +25,7 @@ export default function DataContainer(props) {
         <View style={styles.secondaryInfos}>
           {props.data[1] && (
             <>
-              <Icon as={MaterialIcons} name="phone" size={4} color="#000" />
+              <Icon as={MaterialIcons} name={props.icon ? props.icon :"phone"} size={4} color="#000" />
               <Text> {props.data[1]}</Text>
             </>
           )}

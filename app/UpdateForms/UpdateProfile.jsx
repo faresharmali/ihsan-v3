@@ -12,7 +12,6 @@ import { Button } from "react-native-paper";
 import { UpdateProfileInfo } from "../api/user";
 import { useDispatch } from "react-redux";
 export default function UpdateProfile({ route, navigation }) {
-
   const [ErrorMessageVisible, setErrorMessageVisible] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
@@ -37,6 +36,7 @@ export default function UpdateProfile({ route, navigation }) {
     ...route.params.Infos,
     password: "",
   });
+  console.log("userInfos", route.params.Infos);
 
   const handleUserInput = (text, name) => {
     setErrorMessageVisible(false);
@@ -44,44 +44,50 @@ export default function UpdateProfile({ route, navigation }) {
     setuserInfos({ ...userInfos, [name]: text });
   };
 
-
   const styling = {
     borderColor: "#000",
     borderWidth: 0.5,
     fontFamily: "Tajawal-Medium",
     fontSize: 14,
   };
- 
 
   const UpdateUserInfos = async () => {
     Keyboard.dismiss();
     if (validate()) {
-      if (userInfos.password.trim()!="" ) {
-        if(userInfos.password.trim().length < 8){
+      if (userInfos.password.trim() != "") {
+        if (userInfos.password.trim().length < 8) {
           setErrorMessage("كلمة المرور يجب ان تكون اكثر من 8 احرف");
           setErrorMessageVisible(true);
-          error=true
-        }else{
+        } else {
           const user = { ...userInfos };
           const res = await UpdateProfileInfo({ ...user });
 
           if (res.ok) {
-            dispatch(setLoggedUser(res.data));
-            navigation.navigate("UserProfile");
+            if (route.params.current == "Current") {
+              dispatch(setLoggedUser(res.data));
+              navigation.navigate("UserProfile");
+            } else {
+              route.params.fetchUsers()
+              navigation.goBack();
+            }
           } else {
           }
         }
-      } 
-     else {
-     const user = { ...userInfos };
-     delete user.password
-     const res = await UpdateProfileInfo({ ...user });
-     if (res.ok) {
-      dispatch(setLoggedUser(res.data));
-       navigation.navigate("UserProfile");
-     } else {
-     }
-    }
+      } else {
+        const user = { ...userInfos };
+        delete user.password;
+        const res = await UpdateProfileInfo({ ...user });
+        if (res.ok) {
+          if (route.params.current == "Current") {
+            dispatch(setLoggedUser(res.data));
+            navigation.navigate("UserProfile");
+          } else {
+            route.params.fetchUsers()
+            navigation.goBack();
+          }
+        } else {
+        }
+      }
     }
   };
 
@@ -101,7 +107,6 @@ export default function UpdateProfile({ route, navigation }) {
     SetErrors(FieldErrors);
     return valid;
   };
-
 
   return (
     <View style={styles.Container}>
@@ -238,11 +243,9 @@ export default function UpdateProfile({ route, navigation }) {
         </View>
       )}
 
-     
-        <Button style={styles.Button} mode="contained" onPress={UpdateUserInfos}>
-          <Text style={{ fontSize: 16, marginLeft: 10 }}>تعديل</Text>
-        </Button>
-    
+      <Button style={styles.Button} mode="contained" onPress={UpdateUserInfos}>
+        <Text style={{ fontSize: 16, marginLeft: 10 }}>تعديل</Text>
+      </Button>
     </View>
   );
 }

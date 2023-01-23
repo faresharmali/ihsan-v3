@@ -114,7 +114,7 @@ const AddTransaction = async () => {
         ...TransactionInfos,
       });
       if (res.ok) {
-        route.params.showToast();
+       
         route.params.refresh();
         navigation.goBack();
       } else {
@@ -178,7 +178,8 @@ const AddTransaction = async () => {
           InputRightElement={
             <Icon
               style={{ marginRight: 10 }}
-              as={<FontAwesome name="user" />}
+              as={<MaterialIcons name="attach-money" />}
+
               size={5}
               ml="2"
               color="#348578"
@@ -201,11 +202,11 @@ const AddTransaction = async () => {
           <View
             style={{
               ...styles.dateContainer,
-              borderColor: errors.section ? "#c21a0e" : "grey",
+              borderColor: errors.receiver ? "#c21a0e" : "grey",
             }}
           >
             <Icon
-              as={<MaterialIcons name="lock" />}
+              as={<FontAwesome name="user" />}
               size={5}
               ml="2"
               color="#348578"
@@ -222,8 +223,8 @@ const AddTransaction = async () => {
             }}
           >
             <Icon
-              as={<MaterialIcons name="lock" />}
-              size={5}
+                    as={<MaterialIcons name="attach-money" />}
+                    size={5}
               ml="2"
               color="#348578"
             />
@@ -268,6 +269,7 @@ const AddTransaction = async () => {
         isPanelActive={ReceiverPannel}
         setIsPanelActive={setReceiverPannel}
         setshowButton={setshowButton}
+        search={true}
       />
       <Swipable
         title="اختيار نوع المدخول"

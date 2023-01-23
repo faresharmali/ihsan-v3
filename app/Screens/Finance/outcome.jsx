@@ -19,8 +19,6 @@ import styles from "./styles";
 import TransactionContainer from "../../Components/TransactionContainer";
 export default function Outcome({ navigation, drawer }) {
   const [active, setActive] = useState(6);
-  const [displayedData, setDisplayedData] = useState([]);
-  const [AllTransactions, seAllTransactions] = useState([]);
   const [filterBy, setfilterBy] = useState("all");
   const dispatch = useDispatch();
   const showToast = () => {
@@ -37,47 +35,32 @@ export default function Outcome({ navigation, drawer }) {
     };
   };
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", async () => {
-      const res = await getTransactions();
-      dispatch(updateState(res.data.result));
+    const unsubscribe = navigation.addListener("focus", () => {
+      refresh()
     });
 
     return unsubscribe;
   }, [navigation]);
 
-  const filterInformations = (section) => {
-    if (section == "all") {
-      setUsersList(userList);
-    } else if (section == "قسم الأيتام") {
-      setUsersList(
-        userList.filter(
-          (info) => info[2] == section || info[2] == "وسيط اجتماعي"
-        )
-      );
-    } else {
-      setUsersList(userList.filter((info) => info[2] == section));
-    }
+  let Transactions = useSelector((state) => state.Finance).transactions.filter(
+    (t) => !t.income
+  );
+
+  const openTransaction = (id) => {
+    navigation.navigate("Transaction", { id, type: "مصروف" ,refresh});
   };
-  let Transactions = useSelector((state) => state.Finance).transactions.filter((t)=>!t.income);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", async () => {
-      seAllTransactions(Transactions);
-      if (filterBy.trim() == "all") setDisplayedData(Transactions);
-      else setDisplayedData(Transactions.filter((t) => t.type == filterBy));
-    });
-
-    return unsubscribe;
-  }, [Transactions]);
-
-  const openTransaction=(id)=>{
-    navigation.navigate("Transaction",{id,type:"مصروف"})
-  }
   const filterData = (type) => {
     setfilterBy(type);
-    if (type == "all") {
-      setDisplayedData(AllTransactions);
-    } else {
-      setDisplayedData(AllTransactions.filter((t) => t.type == type));
+  
+
+  };
+  const refresh = async () => {
+    try {
+      const res = await getTransactions();
+      dispatch(updateState(res.data.result));
+
+    } catch (e) {
+      console.log(e);
     }
   };
   return (
@@ -232,9 +215,23 @@ export default function Outcome({ navigation, drawer }) {
       </View>
       <View style={styles.Section}>
         <ScrollView style={styles.Content}>
-          {displayedData.map((transaction)=>(
-            <TransactionContainer key={transaction.identifier} open={openTransaction} data={transaction}/>
-            ))}
+        {filterBy == "all"
+            ? Transactions.map((transaction) => (
+                <TransactionContainer
+                  key={transaction.identifier}
+                  open={openTransaction}
+                  data={transaction}
+                />
+              ))
+            : Transactions.filter((t) => t.type == filterBy).map(
+                (transaction) => (
+                  <TransactionContainer
+                    key={transaction.identifier}
+                    open={openTransaction}
+                    data={transaction}
+                  />
+                )
+              )}
         </ScrollView>
       </View>
       <Toast config={toastConfig} />

@@ -289,6 +289,7 @@ export default function Informations({ navigation, drawer }) {
           {InformationsList.map((f) => (
             <DataContainer
             select={selectInformation}
+              icon={"badge"}
               key={f.id}
               AvatarSize={22}
               data={f}

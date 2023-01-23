@@ -13,6 +13,7 @@ import { Icon } from "native-base";
 import {
   Ionicons,
   AntDesign,
+  MaterialCommunityIcons
 } from "@expo/vector-icons";
 import Family from "../../../assets/avatars/family.png";
 
@@ -36,7 +37,7 @@ export default function Distributeur({ route, navigation }) {
       data: data,
     };
   };
-  const Famillies = useSelector((state) => state.Families).filter((f) =>f.wasseet?._id == route.params._id);
+  let user = useSelector((state) => state.users).filter((user)=>user._id==route.params._id)[0];
 
   const StateUser = useSelector((state) => state.users).filter(
     (u) => u.id == route.params.id
@@ -66,10 +67,6 @@ export default function Distributeur({ route, navigation }) {
     } else {
     }
     showDeleteModal(false);
-  };
-  const selectFamily = (id) => {
-    showDeleteModal(true);
-    setSelectedFamily(id);
   };
 
   useEffect(() => {
@@ -116,6 +113,17 @@ export default function Distributeur({ route, navigation }) {
           <TouchableOpacity onPress={() => navigation.navigate("Users")}>
             <Icon as={Ionicons} size={8} color="#fff" name="md-chevron-back" />
           </TouchableOpacity>
+          {route.params.EnableEdit && (
+
+            <TouchableOpacity onPress={() => navigation.navigate("UpdateProfileInfo",{Infos:user,fetchUsers:route.params.fetchUsers})}>
+          <Icon
+            as={MaterialCommunityIcons}
+            size={8}
+            color="#fff"
+            name="square-edit-outline"
+            />
+          </TouchableOpacity>
+            )}
         </View>
         <Image style={styles.EntityImage} source={man} />
         <Text style={styles.EntityTitle}>{StateUser[0]}</Text>
@@ -143,8 +151,10 @@ export default function Distributeur({ route, navigation }) {
       )}
       {section == "famillies" && (
         <>
-          <ScrollView style={styles.Content}>
-            {route.params.followers?.map((f) => (
+          <ScrollView contentContainerStyle={{
+          paddingBottom: 25,
+        }} style={styles.Content}>
+            {user.followers?.map((f) => (
                 <FamilyInfosContainer
                   key={f._id}
                   AvatarSize={40}
@@ -153,7 +163,7 @@ export default function Distributeur({ route, navigation }) {
                   selectFamily={()=>{}}
                 />
               ))}
-            {route.params.deliveries?.map((f) => (
+            {user.deliveries?.map((f) => (
                 <FamilyInfosContainer
                   key={f._id}
                   AvatarSize={40}
@@ -177,7 +187,9 @@ export default function Distributeur({ route, navigation }) {
         </>
       )}
       {section == "posts" && (
-        <ScrollView style={styles.Content}>
+        <ScrollView contentContainerStyle={{
+          paddingBottom: 25,
+        }} style={styles.Content}>
           {Informations.map((f) => (
             <DataContainer
               key={f.id}
@@ -200,6 +212,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     zIndex: 10,
+    height:"100%",
   },
   pageEntity: {
     width: "100%",
@@ -252,8 +265,7 @@ const styles = StyleSheet.create({
   Content: {
     marginTop: 30,
     width: "100%",
-    maxHeight: "71.5%",
-    display: "flex",
+    maxHeight: "70%",
     paddingTop: 10,
     paddingLeft: 20,
     paddingRight: 20,

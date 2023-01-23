@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         width: 120,
         zIndex: 5,
         height: 50,
-        backgroundColor: "red"
+        backgroundColor: "#b8180d"
     },
     input: {
         position: "absolute",

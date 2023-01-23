@@ -189,7 +189,7 @@ export default function AddOutcome({ route, navigation }) {
           InputRightElement={
             <Icon
               style={{ marginRight: 10 }}
-              as={<FontAwesome name="user" />}
+              as={<MaterialIcons name="attach-money" />}
               size={5}
               ml="2"
               color="#348578"
@@ -212,7 +212,7 @@ export default function AddOutcome({ route, navigation }) {
           InputRightElement={
             <Icon
               style={{ marginRight: 10 }}
-              as={<FontAwesome name="user" />}
+              as={<FontAwesome name="attach-money" />}
               size={5}
               ml="2"
               color="#348578"
@@ -235,12 +235,12 @@ export default function AddOutcome({ route, navigation }) {
           <View
             style={{
               ...styles.dateContainer,
-              borderColor: errors.section ? "#c21a0e" : "grey",
+              borderColor: errors.receiver ? "#c21a0e" : "grey",
             }}
           >
             <Icon
-              as={<MaterialIcons name="lock" />}
-              size={5}
+                    as={<FontAwesome name="user" />}
+                    size={5}
               ml="2"
               color="#348578"
             />
@@ -256,8 +256,8 @@ export default function AddOutcome({ route, navigation }) {
             }}
           >
             <Icon
-              as={<MaterialIcons name="lock" />}
-              size={5}
+                    as={<MaterialIcons name="attach-money" />}
+                    size={5}
               ml="2"
               color="#348578"
             />
@@ -302,6 +302,8 @@ export default function AddOutcome({ route, navigation }) {
         isPanelActive={ReceiverPannel}
         setIsPanelActive={setReceiverPannel}
         setshowButton={setshowButton}
+        search={true}
+
       />
       <Swipable
         title="اختيار نوع المدخول"

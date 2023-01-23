@@ -19,10 +19,15 @@ export default function UpdateFamily({ route, navigation }) {
   const [ErrorMessageVisible, setErrorMessageVisible] = useState(false);
   const [ErrorMessage, setErrorMessage] = useState("");
   const [isPanelActive, setIsPanelActive] = useState(false);
+  const [isPanelActive2, setIsPanelActive2] = useState(false);
   const [showButton, setshowButton] = useState(true);
   const [kofa, setKofa] = useState(route.params.infos.kofa);
   const [sick, setMomSick] = useState(route.params.infos.sick);
   const [wasseet, setwasseet] = useState(route.params.infos.wasseet[0].name);
+  const [Delivery, setDelivery] = useState(route.params.infos.delivery[0] ? route.params.infos.delivery[0].name : "");
+  let deleveries = useSelector((state) => state.users).filter(
+    (d) => d.job.trim() == "موزع القفة"
+  ).map((u) => ({ title: u[0],value:u._id }))
   let users = useSelector((state) => state.users).filter(
     (d) => d.job.trim() == "وسيط اجتماعي"
   );
@@ -37,13 +42,21 @@ export default function UpdateFamily({ route, navigation }) {
     donation: false,
     wasseet: false,
     sickness: false,
+    delivery: false,
   });
   const [userInfos, setuserInfos] = useState({
     ...route.params.infos,
+    wasseet:route.params.infos.wasseet[0]._id,
+    delivery:route.params.infos.delivery[0] ? route.params.infos.delivery[0].name : ""
   });
   const openPanel = () => {
     Keyboard.dismiss();
     setIsPanelActive(true);
+    setshowButton(false);
+  };
+  const openPanel2 = () => {
+    Keyboard.dismiss();
+    setIsPanelActive2(true);
     setshowButton(false);
   };
   const handleUserInput = (text, name) => {
@@ -60,9 +73,10 @@ export default function UpdateFamily({ route, navigation }) {
   };
 
   const CreateNewUser = async () => {
+    console.log(userInfos.wasseet);
     Keyboard.dismiss();
     if (validate()) {
-      const res = await UpdateFamilyInfos({ ...userInfos, kofa, sick,delivery:userInfos.delivery._id });
+      const res = await UpdateFamilyInfos({ ...userInfos, kofa, sick });
       if (res.ok) {
         navigation.navigate("Famillies")
       } else {
@@ -99,19 +113,32 @@ export default function UpdateFamily({ route, navigation }) {
     if (userInfos.wasseet.trim() == "") {
       (FieldErrors.wasseet = true), (valid = false);
     }
+    if (userInfos.delivery.trim() == "") {
+      (FieldErrors.delivery = true), (valid = false);
+    }
     if (sick && userInfos.sickness.trim() == "") {
       (FieldErrors.wasseet = true), (valid = false);
     }
     SetErrors(FieldErrors);
+    if(!valid){
+      alert("يرجى ملأ كل الخانات")
+
+    }
     return valid;
   };
 
   const ChooseJob = (wasseet,wasseetId) => {
-    console.log(wasseetId);
     SetErrors({ ...errors, wasseet: false });
     setuserInfos({ ...userInfos, wasseet: wasseetId });
     setwasseet(wasseet);
     setIsPanelActive(false);
+    setshowButton(true);
+  };
+  const ChooseDelivery = (delivery,deliveryId) => {
+    SetErrors({ ...errors, delivery: false });
+    setuserInfos({ ...userInfos, delivery: deliveryId });
+    setDelivery(delivery);
+    setIsPanelActive2(false);
     setshowButton(true);
   };
   return (
@@ -271,7 +298,7 @@ export default function UpdateFamily({ route, navigation }) {
                 InputRightElement={
                   <Icon
                     style={{ marginRight: 10 }}
-                    as={<MaterialIcons name="account-circle" />}
+                    as={<MaterialIcons name="location-pin" />}
                     size={5}
                     ml="2"
                     color="#348578"
@@ -297,7 +324,7 @@ export default function UpdateFamily({ route, navigation }) {
                 InputRightElement={
                   <Icon
                     style={{ marginRight: 10 }}
-                    as={<MaterialIcons name="lock" />}
+                    as={<MaterialIcons name="attach-money" />}
                     size={5}
                     ml="2"
                     color="#348578"
@@ -321,7 +348,7 @@ export default function UpdateFamily({ route, navigation }) {
                 InputRightElement={
                   <Icon
                     style={{ marginRight: 10 }}
-                    as={<MaterialIcons name="lock" />}
+                    as={<MaterialIcons name="attach-money" />}
                     size={5}
                     ml="2"
                     color="#348578"
@@ -349,12 +376,28 @@ export default function UpdateFamily({ route, navigation }) {
                 }}
               >
                 <Icon
-                  as={<MaterialIcons name="lock" />}
+                  as={<FontAwesome name="user" />}
                   size={5}
                   ml="2"
                   color="#348578"
                 />
                 <Text style={styles.InputText}>{wasseet} </Text>
+              </View>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={() => openPanel2()}>
+              <View
+                style={{
+                  ...styles.dateContainer,
+                  borderColor: errors.delivery ? "#c21a0e" : "grey",
+                }}
+              >
+                <Icon
+                  as={<FontAwesome name="user" />}
+                  size={5}
+                  ml="2"
+                  color="#348578"
+                />
+                <Text style={styles.InputText}>{Delivery} </Text>
               </View>
             </TouchableWithoutFeedback>
             <Checkbox
@@ -394,6 +437,14 @@ export default function UpdateFamily({ route, navigation }) {
         data={allUSers}
         isPanelActive={isPanelActive}
         setIsPanelActive={setIsPanelActive}
+        setshowButton={setshowButton}
+      />
+      <Swipable
+        title="اختيار موزع القفة"
+        ChooseJob={ChooseDelivery}
+        data={deleveries}
+        isPanelActive={isPanelActive2}
+        setIsPanelActive={setIsPanelActive2}
         setshowButton={setshowButton}
       />
     </View>

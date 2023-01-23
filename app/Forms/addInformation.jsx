@@ -41,7 +41,6 @@ export default function AddInformation({ route, navigation }) {
     id: uuid.v4(),
     title: "",
     content: "",
-    type: InformationType,
     date: new Date(),
     author: useSelector((state) => state.Auth)._id,
   });
@@ -50,7 +49,7 @@ export default function AddInformation({ route, navigation }) {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       () => {
-        if (  isTypePannel || isPanelActive) {
+        if (isTypePannel || isPanelActive) {
           setIsTypePannel(false);
           setIsFamiltPanelActive(false);
           setIsPanelActive(false);
@@ -129,6 +128,7 @@ export default function AddInformation({ route, navigation }) {
         kids: selectedOrpahns,
         famillies: selectedFamilies,
         benificier: ActivityType,
+        type: InformationType,
       });
       if (res.ok) {
         route.params.showToast();
@@ -144,7 +144,7 @@ export default function AddInformation({ route, navigation }) {
   const Famillies = useSelector((state) => state.Families);
   let Orphans = [];
   Famillies.forEach((f) => {
-    f.kids.forEach((k) => {
+    f.children.forEach((k) => {
       Orphans.push({ ...k, lastName: f.fatherLastName });
     });
   });
@@ -166,6 +166,9 @@ export default function AddInformation({ route, navigation }) {
             age: o.age,
             gender: o.gender,
             scolarity: o.scolarity,
+            day: o.day,
+            month: o.month,
+            year: o.year,
           }))
         );
       } else {
@@ -188,6 +191,7 @@ export default function AddInformation({ route, navigation }) {
     }
   };
   const activityTypes = [
+    "كل الأقسام",
     "قسم المالية",
     "قسم القفة",
     "قسم الأيتام",
@@ -250,12 +254,12 @@ export default function AddInformation({ route, navigation }) {
         />
         <View style={styles.radioContainer}>
           <Radio.Group
-            value={ActivityInfos.type}
+            value={InformationType}
             style={{ flexDirection: "row" }}
             name="myRadioGroup"
             accessibilityLabel="favorite number"
             onChange={(type) => {
-              handleUserInput(type, "type");
+              setInformationType(type);
             }}
           >
             <Radio
@@ -351,7 +355,7 @@ export default function AddInformation({ route, navigation }) {
           </Radio.Group>
         </View>
 
-        {ActivityInfos.type != "suggestion" && ActivityType == "orphan" && (
+        {InformationType != "suggestion" && ActivityType == "orphan" && (
           <TouchableWithoutFeedback onPress={() => openPanel()}>
             <View
               style={{
@@ -369,7 +373,7 @@ export default function AddInformation({ route, navigation }) {
             </View>
           </TouchableWithoutFeedback>
         )}
-        {ActivityInfos.type != "suggestion" && ActivityType == "family" && (
+        {InformationType != "suggestion" && ActivityType == "family" && (
           <TouchableWithoutFeedback onPress={() => openFamilyPannel()}>
             <View
               style={{
@@ -420,7 +424,10 @@ export default function AddInformation({ route, navigation }) {
         type={"family"}
         title="العائلات المستفيدة"
         getSelectedData={getSelectedData}
-        data={Famillies.map((o) => ({ ...o, title:"عائلة "+ o.fatherLastName }))}
+        data={Famillies.map((o) => ({
+          ...o,
+          title: "عائلة " + o.fatherLastName,
+        }))}
         isPanelActive={isFamiltPanelActive}
         setIsPanelActive={setIsFamiltPanelActive}
         setshowButton={setshowButton}
@@ -474,7 +481,6 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     marginBottom: 20,
   },
-  
 
   Button: {
     flexDirection: "row-reverse",

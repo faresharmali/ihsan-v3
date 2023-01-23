@@ -20,7 +20,7 @@ export default function Kids(props) {
           <Image source={Kid} style={styles.avatar} />
           <View style={styles.infos}>
             <Text style={styles.UserPersonal}>
-              {k.name} {k.lastName} {props.lastName} 
+              {k.name} {k.lastName} {props.lastName}
             </Text>
             <View style={styles.secondaryInfos}>
               <Icon
@@ -37,7 +37,17 @@ export default function Kids(props) {
                 size={4}
                 color="#348578"
               />
-              <Text style={styles.kidInfo}>العمر :  {getAge(k.year + "-" + k.month + "-" + k.day)} سنة </Text>
+              <Text style={styles.kidInfo}>
+                العمر :{" "}
+                {getAge(
+                  k.year +
+                    "-" +
+                    (k.month.length > 1 ? k.month : "0" + k.month) +
+                    "-" +
+                    (k.day.length > 1 ? k.day : "0" + k.day)
+                )}{" "}
+                سنة{" "}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>

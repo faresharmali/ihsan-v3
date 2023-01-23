@@ -267,6 +267,7 @@ import {
           isPanelActive={ReceiverPannel}
           setIsPanelActive={setReceiverPannel}
           setshowButton={setshowButton}
+          search={true}
         />
         <Swipable
           title="اختيار نوع المدخول"
@@ -325,7 +326,7 @@ import {
       marginBottom: 20,
     },
     input: {
-      backgroundColor: "red",
+      backgroundColor: "#b8180d",
     },
   
     Button: {

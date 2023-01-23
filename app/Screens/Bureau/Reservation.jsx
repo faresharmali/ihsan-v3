@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
   btn: {
     width: "50%",
-    backgroundColor: "red",
+    backgroundColor: "#b8180d",
     marginTop: 10,
     marginBottom: 10,
     borderRadius: 10,
